@@ -1,18 +1,18 @@
 from keras.datasets import fashion_mnist
+from keras.utils import to_categorical
 from keras import models
 from keras import layers
-from keras.utils import to_categorical
 from keras import callbacks
 import numpy as np
 
 
 # create base model
-# Acc: 0.8913
+# Acc: 0.8852
 def create_base_model():
     model = models.Sequential()
     model.add(layers.Dense(512, activation="relu", input_shape=(28 * 28,)))
     model.add(layers.Dense(10, activation="softmax"))
-    model.compile(optimizer="adam",
+    model.compile(optimizer="rmsprop",
                   loss="categorical_crossentropy",
                   metrics=["acc"])
     return model
