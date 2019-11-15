@@ -7,12 +7,12 @@ import numpy as np
 
 
 # create base model
-# Acc: 0.8852
+# Acc: 0.8871
 def create_base_model():
     model = models.Sequential()
-    model.add(layers.Dense(512, activation="relu", input_shape=(28 * 28,)))
+    model.add(layers.Dense(28 * 28, activation="relu", input_shape=(28 * 28,)))
     model.add(layers.Dense(10, activation="softmax"))
-    model.compile(optimizer="rmsprop",
+    model.compile(optimizer="adam",
                   loss="categorical_crossentropy",
                   metrics=["acc"])
     return model
