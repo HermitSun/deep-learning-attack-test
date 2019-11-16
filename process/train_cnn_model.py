@@ -7,7 +7,7 @@ import numpy as np
 
 
 # create base model
-# Acc: 0.9149
+# Acc: 0.9173
 def create_cnn_model():
     # create model
     model = models.Sequential()
@@ -56,7 +56,7 @@ history = network.fit(
     train_labels,
     validation_split=0.2,
     batch_size=128,
-    epochs=30,
+    epochs=40,
     callbacks=callbacks_list,
     verbose=0
 )
