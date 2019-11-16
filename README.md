@@ -9,26 +9,26 @@ TODO
 #### 代码结构
 
 ```powershell
-│  generate.py
-│  model.hdf5
-│  README.pdf
+│  generate.py              # 可调用的对抗样本生成函数
+│  model.hdf5               # 基于fashion_mnist训练的模型
+│  README.pdf               # 本说明文件
 │
-├─attack_data
+├─attack_data               # 生成的对抗样本
 │      attack_data.npy
 │
-├─models
-│      base_model.hdf5
+├─models                    # 模型相关，包括模型的训练和测试过程
+│      base_model.hdf5          # 全连接模型
 │      base_model_train.py
-│      cnn_model.hdf5
+│      cnn_model.hdf5           # CNN模型
 │      cnn_model_train.py
-│      model_test.py
+│      model_test.py            # 模型测试
 │
-├─process
-│      split_data.py
-│      ssim.py
+├─process                   # 整个项目的处理过程
+│      split_data.py            # 分离fashion_mnist的数据
+│      ssim.py                  # SSIM计算
 │
-└─test_data
-        test_data.npy
+└─test_data                 # fashion_mnist的测试数据
+       test_data.npy
 ```
 
 #### 运行方法
