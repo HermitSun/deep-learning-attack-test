@@ -16,7 +16,7 @@ def get_ssim(
     img_arr1 : numpy.ndarray
         代表第一张图片的numpy数组
     img_arr2 : numpy.ndarray
-        代表第一张图片的numpy数组
+        代表第二张图片的numpy数组
     max_val : float
         图片每个像素点的最大值
     其他参数参见tensorflow.image.ssim
