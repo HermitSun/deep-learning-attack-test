@@ -43,7 +43,7 @@ for i in range(has_processed + 1, len(test_data)):
                 max_ssim = current_ssim
                 max_j = sample_index
     # 将SSIM最高的样本作为噪声，合并到原图片上，生成对抗样本
-    alpha = 0
+    alpha = 1 / (3.25 + max_ssim)
     beta = 1 - alpha
     gamma = 0
     attack = test_data[i] * alpha + test_data[max_j] * beta + gamma

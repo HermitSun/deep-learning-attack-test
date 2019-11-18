@@ -31,7 +31,7 @@ for i in range(has_processed + 1, len(test_data)):
     epochs = 10
     epsilon = 0.01
 
-    for i in range(epochs):
+    for j in range(epochs):
         target = K.one_hot(initial_class, 10)
         loss = K.categorical_crossentropy(target, model.output)
         grads = K.gradients(loss, model.input)
@@ -41,7 +41,7 @@ for i in range(has_processed + 1, len(test_data)):
         x_adv = sess.run(x_adv, feed_dict={model.input: x})
         preds = model.predict(x_adv)
 
-        print(i, np.argmax(preds))
+        print(j, np.argmax(preds))
         # 循环epochs次或者使模型预测出错时不再增加噪声
         if not np.argmax(preds) == initial_class:
             success_count += 1
