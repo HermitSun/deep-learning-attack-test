@@ -8,7 +8,7 @@ from tqdm import tqdm
 test_data = np.load("../test_data/test_data.npy")
 # 读取断点
 # 读取断点
-attack_data = []
+attack_data = list(np.load("../attack_data/attack_data.npy"))
 has_processed = 6250 + len(attack_data)
 ssim_sum = 0
 success_count = 0
