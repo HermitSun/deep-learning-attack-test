@@ -1,4 +1,5 @@
 import tensorflow as tf
+from keras import backend as K
 
 
 def get_ssim(
@@ -35,6 +36,8 @@ def get_ssim(
         k1=k1,
         k2=k2
     )
-    with tf.Session() as sess:
-        ssim = sess.run(ssim)
+    sess = tf.Session()
+    K.set_session(sess)
+    ssim = K.get_session().run(ssim)
+    K.clear_session()
     return ssim
