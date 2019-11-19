@@ -1,28 +1,30 @@
 from keras.models import load_model
-import keras.backend as K
+from keras import backend as K
 from process.ssim import get_ssim
 import numpy as np
 import time
+from tqdm import tqdm
 
-# 加载模型
-model = load_model("../models/cnn_model.hdf5")
 test_data = np.load("../test_data/test_data.npy")
 # 读取断点
 # 读取断点
-attack_data = list(np.load('../attack_data/attack_data.npy'))
+attack_data = []
 has_processed = 6250 + len(attack_data)
 ssim_sum = 0
 success_count = 0
 start = time.time()
-for i in range(has_processed + 1, len(test_data)):
+for i in tqdm(range(has_processed + 1, len(test_data))):
+    # 每次清除session
+    K.clear_session()
+    sess = K.get_session()
     # 需要进行预测，所以转换成(n,28,28,1)
     img = test_data[i]
     x = img.reshape(1, 28, 28, 1)
+    # 加载模型
+    model = load_model("../models/cnn_model.hdf5")
     # 模型一开始的预测结果
     preds = model.predict(x)
     initial_class = np.argmax(preds)
-
-    sess = K.get_session()
     # 对抗样本
     x_adv = x
     # 噪声
@@ -65,9 +67,8 @@ for i in range(has_processed + 1, len(test_data)):
             # 循环epochs次或者使模型预测出错时不再增加噪声
             if not np.argmax(preds) == initial_class:
                 break
-
     ssim_sum += ssim_val
-    print(i, ssim_val)
+    print('No: {}, SSIM: {}'.format(i, ssim_val))
     attack_data.append(x_adv)
     # 保存，可以用于断点续传
     np.save("../attack_data/attack_data.npy", np.array(attack_data))
