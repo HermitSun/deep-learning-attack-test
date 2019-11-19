@@ -68,6 +68,7 @@ for i in range(has_processed + 1, len(test_data)):
 
     ssim_sum += ssim_val
     print(i, ssim_val)
+    attack_data.append(x_adv)
     # 保存，可以用于断点续传
     np.save("../attack_data/attack_data.npy", np.array(attack_data))
 
