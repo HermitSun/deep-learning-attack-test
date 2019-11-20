@@ -8,21 +8,23 @@ import time
 model = load_model("../models/cnn_model.hdf5")
 test_data = np.load("../test_data/test_data.npy")
 # 读取断点
-# 读取断点
 attack_data = list(np.load("../attack_data/attack_data.npy"))
 has_processed = len(attack_data)
 ssim_sum = 0
 success_count = 0
 start = time.time()
 for i in range(has_processed + 1, len(test_data)):
+    # 每次清除session
+    K.clear_session()
+    sess = K.get_session()
     # 需要进行预测，所以转换成(n,28,28,1)
     img = test_data[i]
     x = img.reshape(1, 28, 28, 1)
+    # 加载模型
+    model = load_model("../models/cnn_model.hdf5")
     # 模型一开始的预测结果
     preds = model.predict(x)
     initial_class = np.argmax(preds)
-
-    sess = K.get_session()
     # 对抗样本
     x_adv = x
     # 噪声
