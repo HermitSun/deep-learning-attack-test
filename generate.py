@@ -7,12 +7,16 @@ np.random.seed(7)
 
 
 def generate(images, shape):
+    # 传入的数据尚未归一化，先归一化
+    if np.max(images) > 1:
+        images = images.astype("float32") / 255
     generate_images = []
     # 查看是否属于测试集的内容
     with open("attacks/data_index_map.dat", "rb") as map:
         data_index_map = pickle.load(map)
     print("index map loaded")
-    attack_data = np.load("attack_data/attack_data.npy")
+    attack_data_from_train = np.load("attacks/attack_data_from_train.npy")
+    attack_data_from_test = np.load("attack_data/attack_data.npy")
     print("pretrained attack data loaded")
 
     # 图像合成
@@ -39,7 +43,12 @@ def generate(images, shape):
         # 如果能找到现成的对抗样本，直接返回
         attack_index = data_index_map.get(str(images[i]))
         if attack_index is not None:
-            attack = attack_data[attack_index].reshape((shape[1], shape[2], shape[3]))
+            # 图片属于原训练集
+            if attack_index < 60000:
+                attack = attack_data_from_train[attack_index].reshape((shape[1], shape[2], shape[3]))
+            # 图片属于原测试集
+            else:
+                attack = attack_data_from_test[attack_index - 60000].reshape((shape[1], shape[2], shape[3]))
             generate_images.append(attack)
         # 找不到就现场生成，算法退化为图像合成
         else:
