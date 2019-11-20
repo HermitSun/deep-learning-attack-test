@@ -1,10 +1,8 @@
 from keras.models import load_model
 from keras.datasets import fashion_mnist
-from keras.utils import to_categorical
 import numpy as np
 from process.ssim import get_ssim
 from generate import generate
-from tqdm import tqdm
 
 # load model
 model = load_model("model.hdf5")
@@ -28,18 +26,13 @@ def attack_success(prev, attack):
 
 # attack success
 success_count = 0
-for i in tqdm(range(len(test_data))):
+for i in range(len(test_data)):
     if attack_success(test_data[i], attack_data[i]):
         success_count += 1
 print("Attack Success:", success_count / len(test_data))
 
 # average SSIM
 ssim_sum = 0
-for i in tqdm(range(10000)):
+for i in range(10000):
     ssim_sum += get_ssim(test_data[i], attack_data[i])
 print("Average SSIM:", ssim_sum / 10000)
-
-# evaluate model
-val_loss, val_acc = model.evaluate(attack_data, to_categorical(test_labels), verbose=0)
-print("Model Loss after Attack:", val_loss)
-print("Model Accuracy after Attack:", val_acc)

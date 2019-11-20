@@ -1,7 +1,6 @@
 import pickle
 import numpy as np
 from process.ssim import get_ssim
-from tqdm import tqdm
 
 # fix random
 np.random.seed(7)
@@ -36,7 +35,7 @@ def generate(images, shape):
         attack = images[current_i] * alpha + images[max_j] * beta + gamma
         generate_images.append(attack)
 
-    for i in tqdm(range(len(images))):
+    for i in range(len(images)):
         # 如果能找到现成的对抗样本，直接返回
         attack_index = data_index_map.get(str(images[i]))
         if attack_index is not None:
