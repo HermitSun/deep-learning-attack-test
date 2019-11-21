@@ -10,9 +10,10 @@ model = load_model("model.hdf5")
 # load test data and labels
 (train_data, train_labels), (t_data, test_labels) = fashion_mnist.load_data()
 test_data = np.load("test_data/test_data.npy")
+generate_data = test_data
 
 # generate attack data
-attack_data = generate(test_data, (len(test_data), 28, 28, 1))
+attack_data = generate(generate_data, (len(generate_data), 28, 28, 1))
 
 
 # judge where attack success
@@ -26,13 +27,15 @@ def attack_success(prev, attack):
 
 # attack success
 success_count = 0
-for i in range(len(test_data)):
-    if attack_success(test_data[i], attack_data[i]):
+success_index = []
+for i in range(len(generate_data)):
+    if attack_success(generate_data[i], attack_data[i]):
         success_count += 1
-print("Attack Success:", success_count / len(test_data))
+        success_index.append(i)
+print("Attack Success:", success_count / len(generate_data))
 
 # average SSIM
 ssim_sum = 0
-for i in range(10000):
-    ssim_sum += get_ssim(test_data[i], attack_data[i])
-print("Average SSIM:", ssim_sum / 10000)
+for i in success_index:
+    ssim_sum += get_ssim(generate_data[i], attack_data[i])
+print("Average SSIM:", ssim_sum / success_count)
