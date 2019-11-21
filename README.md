@@ -4,7 +4,7 @@
 
 #### 项目介绍
 
-项目基于Keras 2.2.4 + TensorFlow 1.14.0开发，使用基于FGSM改进的预训练的二次迭代FGSM with momentum + 联机的图像合成算法，在相对较短的时间内即可生成较为有效的对抗样本，在测试集上能达到0.8097的攻击成功率和0.9116的平均SSIM。
+项目基于Keras 2.2.4 + TensorFlow 1.14.0开发，使用基于FGSM调整的预训练的二次迭代FGSM with momentum + 联机的图像合成算法，在相对较短的时间内即可生成较为有效的对抗样本，在数据集上最高能达到0.8315的攻击成功率（平均0.8100）和最高0.9133（平均0.8935）的平均SSIM。
 
 #### 代码结构
 
@@ -61,11 +61,15 @@ attack_data = generate(test_data, (len(test_data), 28, 28, 1))
 attack_success(test_data, attack_data)
 ```
 
-可运行的代码参见`example.py`，可以使用`python example.py`查看测试效果。因为数据量较大，计算SSIM需要一段时间，请稍作等待。
+可以使用`python example.py`查看测试效果。因为数据量较大，计算SSIM需要一段时间，请稍作等待（本地使用单核CPU，大约需要30min）。
 
 #### 生成时间
 
-在单核CPU上，单次预训练（生成现有的对抗样本）花费32824.76  s。在实际使用中，CPU 8核并行计算，大约花费1.5 h。
+目标是用空间换时间。在单核CPU上，单次预训练（生成现有的对抗样本）花费32824.76  s。在实际使用中，CPU8核并行计算，大约花费1.5h。
+
+如果传入的数据能在预训练的数据中找到，则大约3ms（取决于硬盘读写速度，本地测试时1s可以生成367个对抗样本）即可生成一个对抗样本。
+
+如果是全新的数据，则算法会退化到图像合成（后续会详细说明），导致生成时间大幅增加，大约30s（取决于CPU/GPU的运算速度，本地使用单核CPU大约花费30s）生成一个对抗样本。
 
 #### 算法详解
 
@@ -244,7 +248,7 @@ def create_cnn_model():
 
 23%的随机噪声时，两个模型的准确率均下降到0.2，但平均SSIM只有0.2295。
 
-噪声比例继续增加，模型的准确率基本不变，SSIM不断下降。
+噪声比例继续增加时，模型的准确率基本不变，SSIM不断下降。
 
 ###### 高斯噪声
 
@@ -298,6 +302,8 @@ def create_cnn_model():
   foo = K.get_session().run(foo)
   K.clear_session()
   ```
+
+- numpy的concatenate方法使用起来稍微有一点点特殊（相对而言），需要在里面加个`[]`，也就是`np.concatenate([A, B])`，没加就会报错only integer scalar arrays can be converted to a scalar index。
 
 #### 致谢
 
