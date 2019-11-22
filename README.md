@@ -33,7 +33,7 @@
 │
 ├─process                           # 整个项目的处理过程
 │      concat_attack_data.py            # 合并对抗样本
-│      get_data_index_map.data.py       # 生成map
+│      generate_data_map.py             # 生成map
 │      noises.py                        # 生成噪声
 │      split_data.py                    # 分离fashion_mnist的数据
 │      ssim.py                          # SSIM计算
